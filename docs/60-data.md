@@ -6,13 +6,23 @@
 
 #### `pages`
 ```sql
+-- updated_at自動更新用の関数（トリガーで使用）
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- pagesテーブル作成
 CREATE TABLE pages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT NOT NULL DEFAULT '',
   content JSONB NOT NULL DEFAULT '{"blocks": []}'::jsonb,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE
+  user_id UUID NOT NULL DEFAULT auth.uid() REFERENCES auth.users(id) ON DELETE CASCADE
 );
 
 -- Indexes
@@ -316,3 +326,4 @@ const { data, error } = await supabase
 - 自動保存はデバウンス（2秒）を使用してAPIコール回数を削減
 - RLSにより、ユーザーは自分のページのみアクセス可能
 - 検索はMVPでは `ILIKE` で十分、将来的にFTSまたはMeilisearchに移行可能
+- **Supabase API Keys**: 新しい `sb_publishable_` キーを使用（Legacy `anon` keyは2025年11月以降非推奨）
