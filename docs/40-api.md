@@ -20,6 +20,7 @@
 
 **Headers:**
 - `Authorization: Bearer <supabase_access_token>` (Cookie経由で自動付与)
+- **Note:** Supabase Client初期化には新しい `sb_publishable_` キーを使用（Legacy `anon` keyは非推奨）
 
 **Query Parameters:**
 - `q`: string (optional) - 検索クエリ（タイトル・本文を全文検索）
@@ -234,5 +235,5 @@ export async function getPage(id: string) { ... }
 
 ## Notes
 - Supabase RLS (Row Level Security) で、ユーザーは自分のページのみアクセス可能に制御
-- 自動保存はデバウンス（2秒）して `PATCH /api/pages/:id` を呼び出す
+- 自動保存はデバウンス（1秒）して `PATCH /api/pages/:id` を呼び出す
 - 検索は Postgres Full-Text Search (FTS) を使用（初期MVPでは `ILIKE` でも可）

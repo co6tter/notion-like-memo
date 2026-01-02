@@ -68,6 +68,7 @@
 ### Project Conventions（おすすめ）
 - **Package manager**: pnpm
 - **Env management**: `.env.local`（機密はCI/HostingのSecretsで管理）
+  - Supabase API Keys: 新しい `sb_publishable_` キーを使用（Legacy `anon` keyは非推奨）
 - **Branching**: PRベース（main直push禁止）
 - **Docs-first**: 変更があるPRは `docs/` も更新する
 
